@@ -1,0 +1,53 @@
+-- VIOLETTE PACKET: BG picker patch
+-- Insira este bloco depois da criacao de bgQuickBtn e remova a conexao antiga
+-- bgQuickBtn.MouseButton1Click que apenas alternava bgImg.Visible.
+
+local bgPickerOpen = false
+local bgPicker = Instance.new("Frame")
+bgPicker.Name = "BackgroundPicker"
+bgPicker.Size = UDim2.fromOffset(224, 76)
+bgPicker.Position = UDim2.new(1, -238, 0, 48)
+bgPicker.BackgroundColor3 = Color3.fromRGB(12, 12, 16)
+bgPicker.BackgroundTransparency = 0.06
+bgPicker.BorderSizePixel = 0
+bgPicker.Visible = false
+bgPicker.ZIndex = 20
+bgPicker.Parent = Main
+corner(bgPicker, 12)
+stroke(bgPicker, PURPLE, 1.3, 0.2)
+
+local bgPickerLayout = Instance.new("UIListLayout")
+bgPickerLayout.FillDirection = Enum.FillDirection.Horizontal
+bgPickerLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+bgPickerLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+bgPickerLayout.Padding = UDim.new(0, 7)
+bgPickerLayout.Parent = bgPicker
+
+for index, imageId in ipairs(SETTINGS_IMAGES) do
+    local choice = Instance.new("ImageButton")
+    choice.Name = "BackgroundChoice" .. index
+    choice.Size = UDim2.fromOffset(43, 54)
+    choice.BackgroundColor3 = Color3.fromRGB(28, 24, 38)
+    choice.BorderSizePixel = 0
+    choice.Image = imageId
+    choice.ScaleType = Enum.ScaleType.Crop
+    choice.AutoButtonColor = true
+    choice.ZIndex = 21
+    choice.Parent = bgPicker
+    corner(choice, 8)
+    stroke(choice, PURPLE, 1, 0.35)
+
+    choice.MouseButton1Click:Connect(function()
+        bgImg.Image = imageId
+        bgImg.Visible = bgEnabled
+        bgPicker.Visible = false
+        bgPickerOpen = false
+        bgQuickBtn.TextColor3 = WHITE
+    end)
+end
+
+bgQuickBtn.MouseButton1Click:Connect(function()
+    bgPickerOpen = not bgPickerOpen
+    bgPicker.Visible = bgPickerOpen
+    bgQuickBtn.TextColor3 = bgPickerOpen and PURPLE or WHITE
+end)
